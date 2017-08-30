@@ -52,6 +52,7 @@ function setFontName(cls) {
     var elm = document.documentElement;
     removeClass(elm, "andada");
     removeClass(elm, "lato");
+    removeClass(elm, "avenir");
     removeClass(elm, "lora");
     removeClass(elm, "raleway");
     addClass(elm, cls);
