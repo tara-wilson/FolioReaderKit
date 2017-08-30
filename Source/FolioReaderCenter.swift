@@ -243,7 +243,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         self.totalPages = (self.book.spine.spineReferences.count ?? 0)
 
         self.collectionView.reloadData()
-        self.configureNavBarButtons()
         self.setCollectionViewProgressiveDirection()
 
         guard
