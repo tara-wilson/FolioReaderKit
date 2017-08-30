@@ -70,6 +70,14 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     fileprivate var isFirstLoad = true
     fileprivate var currentWebViewScrollPositions = [Int: CGPoint]()
     fileprivate var currentOrientation: UIInterfaceOrientation?
+    
+    public func nextPage() {
+        
+    }
+    
+    public func prevPage() {
+        
+    }
 
     fileprivate var readerConfig: FolioReaderConfig {
         guard let readerContainer = readerContainer else { return FolioReaderConfig() }
@@ -243,7 +251,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
 
     }
 
-    func reloadData() {
+    public func reloadData() {
         self.loadingView.stopAnimating()
         self.totalPages = (self.book.spine.spineReferences.count ?? 0)
 
