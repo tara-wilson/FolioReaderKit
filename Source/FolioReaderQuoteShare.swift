@@ -7,6 +7,7 @@
 //
 
 import UIKit
+/*
 
 class FolioReaderQuoteShare: UIViewController {
     var quoteText: String!
@@ -425,3 +426,5 @@ extension FolioReaderQuoteShare: UIImagePickerControllerDelegate, UINavigationCo
         self.dismiss(animated: true, completion: nil)
     }
 }
+ 
+ */

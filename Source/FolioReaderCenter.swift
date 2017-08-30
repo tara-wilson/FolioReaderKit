@@ -240,34 +240,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
 
     func configureNavBarButtons() {
 
-        // Navbar buttons
-        let shareIcon = UIImage(readerImageNamed: "icon-navbar-share")?.ignoreSystemTint(withConfiguration: self.readerConfig)
-        let audioIcon = UIImage(readerImageNamed: "icon-navbar-tts")?.ignoreSystemTint(withConfiguration: self.readerConfig) //man-speech-icon
-        let closeIcon = UIImage(readerImageNamed: "icon-navbar-close")?.ignoreSystemTint(withConfiguration: self.readerConfig)
-        let tocIcon = UIImage(readerImageNamed: "icon-navbar-toc")?.ignoreSystemTint(withConfiguration: self.readerConfig)
-        let fontIcon = UIImage(readerImageNamed: "icon-navbar-font")?.ignoreSystemTint(withConfiguration: self.readerConfig)
-        let space = 70 as CGFloat
 
-        let menu = UIBarButtonItem(image: closeIcon, style: .plain, target: self, action:#selector(closeReader(_:)))
-        let toc = UIBarButtonItem(image: tocIcon, style: .plain, target: self, action:#selector(presentChapterList(_:)))
-
-        navigationItem.leftBarButtonItems = [menu, toc]
-
-        var rightBarIcons = [UIBarButtonItem]()
-
-        if (self.readerConfig.allowSharing == true) {
-            rightBarIcons.append(UIBarButtonItem(image: shareIcon, style: .plain, target: self, action:#selector(shareChapter(_:))))
-        }
-
-        if (self.book.hasAudio() == true || self.readerConfig.enableTTS == true) {
-            rightBarIcons.append(UIBarButtonItem(image: audioIcon, style: .plain, target: self, action:#selector(presentPlayerMenu(_:))))
-        }
-
-        let font = UIBarButtonItem(image: fontIcon, style: .plain, target: self, action: #selector(presentFontsMenu))
-        font.width = space
-
-        rightBarIcons.append(contentsOf: [font])
-        navigationItem.rightBarButtonItems = rightBarIcons
     }
 
     func reloadData() {
@@ -416,7 +389,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     }
 
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        var reuseableCell = collectionView.dequeueReusableCell(withReuseIdentifier: kReuseCellIdentifier, for: indexPath) as? FolioReaderPage
+        let reuseableCell = collectionView.dequeueReusableCell(withReuseIdentifier: kReuseCellIdentifier, for: indexPath) as? FolioReaderPage
         return self.configure(readerPageCell: reuseableCell, atIndexPath: indexPath)
     }
 
@@ -1032,6 +1005,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
                 }
 
                 if (pageIndicatorView?.currentPage != webViewPage) {
+                    FolioReader.shared.delegate?.folioReader?(FolioReader.shared, changedPage: webViewPage)
                     pageIndicatorView?.currentPage = webViewPage
                 }
             }
@@ -1112,73 +1086,17 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         folioReader.saveReaderState()
 
         let chapter = FolioReaderChapterList(folioReader: folioReader, readerConfig: readerConfig, book: book, delegate: self)
-        let highlight = FolioReaderHighlightList(folioReader: folioReader, readerConfig: readerConfig)
         let pageController = PageViewController(folioReader: folioReader, readerConfig: readerConfig)
 
         pageController.viewControllerOne = chapter
-        pageController.viewControllerTwo = highlight
         pageController.segmentedControlItems = [readerConfig.localizedContentsTitle, readerConfig.localizedHighlightsTitle]
 
         let nav = UINavigationController(rootViewController: pageController)
         present(nav, animated: true, completion: nil)
     }
 
-    /**
-     Present fonts and settings menu
-     */
-    func presentFontsMenu() {
-        folioReader.saveReaderState()
-        hideBars()
 
-        let menu = FolioReaderFontsMenu(folioReader: folioReader, readerConfig: readerConfig)
-        menu.modalPresentationStyle = .custom
 
-        animator = ZFModalTransitionAnimator(modalViewController: menu)
-        animator.isDragable = false
-        animator.bounces = false
-        animator.behindViewAlpha = 0.4
-        animator.behindViewScale = 1
-        animator.transitionDuration = 0.6
-        animator.direction = ZFModalTransitonDirection.bottom
-
-        menu.transitioningDelegate = animator
-        self.present(menu, animated: true, completion: nil)
-    }
-
-    /**
-     Present audio player menu
-     */
-    func presentPlayerMenu(_ sender: UIBarButtonItem) {
-        folioReader.saveReaderState()
-        hideBars()
-
-        let menu = FolioReaderPlayerMenu(folioReader: folioReader, readerConfig: readerConfig)
-        menu.modalPresentationStyle = .custom
-
-        animator = ZFModalTransitionAnimator(modalViewController: menu)
-        animator.isDragable = true
-        animator.bounces = false
-        animator.behindViewAlpha = 0.4
-        animator.behindViewScale = 1
-        animator.transitionDuration = 0.6
-        animator.direction = ZFModalTransitonDirection.bottom
-
-        menu.transitioningDelegate = animator
-        present(menu, animated: true, completion: nil)
-    }
-
-    /**
-     Present Quote Share
-     */
-    func presentQuoteShare(_ string: String) {
-        let quoteShare = FolioReaderQuoteShare(initWithText: string, readerConfig: readerConfig, folioReader: folioReader, book: book)
-        let nav = UINavigationController(rootViewController: quoteShare)
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            nav.modalPresentationStyle = .formSheet
-        }
-        present(nav, animated: true, completion: nil)
-    }
 }
 
 // MARK: FolioPageDelegate

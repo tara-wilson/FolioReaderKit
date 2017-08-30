@@ -98,22 +98,27 @@ open class FolioReaderConfig: NSObject {
     // MARK: Colors
 
     /// Base header custom TintColor
-    open var tintColor = UIColor(rgba: "#6ACC50")
+//    open var tintColor = UIColor(rgba: "#6ACC50")
+    open var tintColor = UIColor.red
 
     /// Menu background color
     open var menuBackgroundColor = UIColor.white
 
     /// Menu separator Color
-    open var menuSeparatorColor = UIColor(rgba: "#D7D7D7")
+//    open var menuSeparatorColor = UIColor(rgba: "#D7D7D7")
+    open var menuSeparatorColor = UIColor.red
 
     /// Menu text color
-    open var menuTextColor = UIColor(rgba: "#767676")
+//    open var menuTextColor = UIColor(rgba: "#767676")
+    open var menuTextColor = UIColor.red
 
     /// Night mode background color
-    open var nightModeBackground = UIColor(rgba: "#131313")
+//    open var nightModeBackground = UIColor(rgba: "#131313")
+    open var nightModeBackground = UIColor.red
 
     /// Night mode menu background color
-    open var nightModeMenuBackground = UIColor(rgba: "#1E1E1E")
+//    open var nightModeMenuBackground = UIColor(rgba: "#1E1E1E")
+    open var nightModeMenuBackground = UIColor.red
 
     /// Night mode separator color
     open var nightModeSeparatorColor = UIColor(white: 0.5, alpha: 0.2)
@@ -145,12 +150,6 @@ open class FolioReaderConfig: NSObject {
     open var hidePageIndicator = false
 
     // MARK: Quote image share
-
-    /// Custom Quote logo
-    open var quoteCustomLogoImage       = UIImage(readerImageNamed: "icon-logo")
-
-    /// Add custom backgrounds and font colors to Quote Images
-    open var quoteCustomBackgrounds     = [QuoteImage]()
 
     /// Enable or disable default Quote Image backgrounds
     open var quotePreserveDefaultBackgrounds    = true

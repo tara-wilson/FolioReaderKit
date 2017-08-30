@@ -189,10 +189,6 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
 
         if (self.readerConfig.enableTTS == true && self.book.hasAudio() == false) {
             webView.js("wrappingSentencesWithinPTags()")
-
-            if let audioPlayer = self.folioReader.readerAudioPlayer, (audioPlayer.isPlaying() == true) {
-                audioPlayer.readCurrentSentence()
-            }
         }
 
         let direction: ScrollDirection = self.folioReader.needsRTLChange ? .positive(withConfiguration: self.readerConfig) : .negative(withConfiguration: self.readerConfig)
@@ -230,15 +226,6 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
             webView.createMenu(options: true)
             webView.setMenuVisible(true, andRect: rect)
             menuIsVisible = true
-
-            return false
-        } else if scheme == "play-audio" {
-
-            guard let decoded = url.absoluteString.removingPercentEncoding else { return false }
-            let playID = decoded.substring(from: decoded.index(decoded.startIndex, offsetBy: 13))
-            let chapter = self.folioReader.readerCenter?.getCurrentChapter()
-            let href = chapter?.href ?? ""
-            self.folioReader.readerAudioPlayer?.playAudio(href, fragmentID: playID)
 
             return false
         } else if scheme == "file" {

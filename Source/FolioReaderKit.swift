@@ -79,6 +79,8 @@ public enum MediaOverlayStyle: Int {
     ///   - folioReader: The FolioReader instance
     ///   - book: The Book instance
     @objc optional func folioReader(_ folioReader: FolioReader, didFinishedLoading book: FRBook)
+    
+    @objc optional func folioReader(_ folioReader: FolioReader, changedPage page: Int)
 
     /// Called when reader did closed.
     ///
@@ -106,7 +108,6 @@ open class FolioReader: NSObject {
     open weak var delegate: FolioReaderDelegate?
 
     open weak var readerContainer: FolioReaderContainer?
-    open weak var readerAudioPlayer: FolioReaderAudioPlayer?
     open weak var readerCenter: FolioReaderCenter? {
         return self.readerContainer?.centerViewController
     }
@@ -159,7 +160,7 @@ extension FolioReader {
     ///   - animated: Pass true to animate the presentation; otherwise, pass false.
     open func presentReader(parentViewController: UIViewController, withEpubPath epubPath: String, andConfig config: FolioReaderConfig, shouldRemoveEpub: Bool = true, animated:
         Bool = true) {
-        var readerContainer = FolioReaderContainer(withConfig: config, folioReader: self, epubPath: epubPath, removeEpub: shouldRemoveEpub)
+        let readerContainer = FolioReaderContainer(withConfig: config, folioReader: self, epubPath: epubPath, removeEpub: shouldRemoveEpub)
         self.readerContainer = readerContainer
         parentViewController.present(readerContainer, animated: animated, completion: nil)
         addObservers()
@@ -357,7 +358,6 @@ extension FolioReader {
         self.saveReaderState()
         self.isReaderOpen = false
         self.isReaderReady = false
-        self.readerAudioPlayer?.stop(immediate: true)
         self.defaults.set(0, forKey: kCurrentTOCMenu)
         self.delegate?.folioReaderDidClose?(self)
         self.delegate?.folioReaderDidClosed?()

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FolioReaderHighlightList: UITableViewController {
+/*class FolioReaderHighlightList: UITableViewController {
 
     fileprivate var highlights = [Highlight]()
     fileprivate var readerConfig: FolioReaderConfig
@@ -169,4 +169,4 @@ class FolioReaderHighlightList: UITableViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         tableView.reloadData()
     }
-}
+}*/

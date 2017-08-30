@@ -7,6 +7,7 @@
 //
 
 import UIKit
+/*
 
 class FolioReaderPlayerMenu: UIViewController, SMSegmentViewDelegate, UIGestureRecognizerDelegate {
 
@@ -292,4 +293,4 @@ class FolioReaderPlayerMenu: UIViewController, SMSegmentViewDelegate, UIGestureR
         }
         return false
     }
-}
+}*/

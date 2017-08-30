@@ -7,6 +7,7 @@
 //
 
 import UIKit
+/*
 
 /**
  Defines a custom Quote image, can be a square `UIImage`, solid `UIColor` or `CAGradientLayer`.
@@ -69,4 +70,4 @@ public struct QuoteImage {
         self.textColor = textColor
         self.backgroundColor = backgroundColor
     }
-}
+}/**/*/

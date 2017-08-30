@@ -13,7 +13,6 @@ import FontBlaster
 open class FolioReaderContainer: UIViewController {
     var centerNavigationController: UINavigationController?
     var centerViewController: FolioReaderCenter?
-    var audioPlayer: FolioReaderAudioPlayer?
     var shouldHideStatusBar = true
     var shouldRemoveEpub = true
     var epubPath: String
@@ -168,10 +167,6 @@ open class FolioReaderContainer: UIViewController {
                 // Reload data
                 DispatchQueue.main.async(execute: {
 
-                    // Add audio player if needed
-                    if (self.book.hasAudio() == true || self.readerConfig.enableTTS == true) {
-                        self.addAudioPlayer()
-                    }
                     self.centerViewController?.reloadData()
                     self.folioReader.isReaderReady = true
                     self.folioReader.delegate?.folioReader?(self.folioReader, didFinishedLoading: self.book)
@@ -190,14 +185,6 @@ open class FolioReaderContainer: UIViewController {
         if (self.errorOnLoad == true) {
             self.dismiss()
         }
-    }
-
-    /**
-     Initialize the media player
-     */
-    func addAudioPlayer() {
-        self.audioPlayer = FolioReaderAudioPlayer(withFolioReader: self.folioReader, book: self.book)
-        self.folioReader.readerAudioPlayer = audioPlayer
     }
 
     // MARK: - Status Bar
