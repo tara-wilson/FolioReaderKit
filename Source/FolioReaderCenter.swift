@@ -238,11 +238,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         setTranslucentNavigation(color: navBackground, tintColor: tintColor, titleColor: navText, andFont: font)
     }
 
-    func configureNavBarButtons() {
-
-
-    }
-
     public func reloadData() {
         self.loadingView.stopAnimating()
         self.totalPages = (self.book.spine.spineReferences.count ?? 0)
@@ -827,134 +822,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         }
     }
 
-    // MARK: - Audio Playing
-
-    func audioMark(href: String, fragmentID: String) {
-        changePageWith(href: href, andAudioMarkID: fragmentID)
-    }
-
-    // MARK: - Sharing
-
-    /**
-     Sharing chapter method.
-     */
-    func shareChapter(_ sender: UIBarButtonItem) {
-        guard let currentPage = currentPage else { return }
-
-        if let chapterText = currentPage.webView.js("getBodyText()") {
-            let htmlText = chapterText.replacingOccurrences(of: "[\\n\\r]+", with: "<br />", options: .regularExpression)
-            var subject = readerConfig.localizedShareChapterSubject
-            var html = ""
-            var text = ""
-            var bookTitle = ""
-            var chapterName = ""
-            var authorName = ""
-            var shareItems = [AnyObject]()
-
-            // Get book title
-            if let title = self.book.title() {
-                bookTitle = title
-                subject += " “\(title)”"
-            }
-
-            // Get chapter name
-            if let chapter = getCurrentChapterName() {
-                chapterName = chapter
-            }
-
-            // Get author name
-            if let author = self.book.metadata.creators.first {
-                authorName = author.name
-            }
-
-            // Sharing html and text
-            html = "<html><body>"
-            html += "<br /><hr> <p>\(htmlText)</p> <hr><br />"
-            html += "<center><p style=\"color:gray\">"+readerConfig.localizedShareAllExcerptsFrom+"</p>"
-            html += "<b>\(bookTitle)</b><br />"
-            html += readerConfig.localizedShareBy+" <i>\(authorName)</i><br />"
-
-            if let bookShareLink = readerConfig.localizedShareWebLink {
-                html += "<a href=\"\(bookShareLink.absoluteString)\">\(bookShareLink.absoluteString)</a>"
-                shareItems.append(bookShareLink as AnyObject)
-            }
-
-            html += "</center></body></html>"
-            text = "\(chapterName)\n\n“\(chapterText)” \n\n\(bookTitle) \n\(readerConfig.localizedShareBy) \(authorName)"
-
-            let act = FolioReaderSharingProvider(subject: subject, text: text, html: html)
-            shareItems.insert(contentsOf: [act, "" as AnyObject], at: 0)
-
-            let activityViewController = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
-            activityViewController.excludedActivityTypes = [UIActivityType.print, UIActivityType.postToVimeo]
-
-            // Pop style on iPad
-            if let actv = activityViewController.popoverPresentationController {
-                actv.barButtonItem = sender
-            }
-
-            present(activityViewController, animated: true, completion: nil)
-        }
-    }
-
-    /**
-     Sharing highlight method.
-     */
-    func shareHighlight(_ string: String, rect: CGRect) {
-        var subject = readerConfig.localizedShareHighlightSubject
-        var html = ""
-        var text = ""
-        var bookTitle = ""
-        var chapterName = ""
-        var authorName = ""
-        var shareItems = [AnyObject]()
-
-        // Get book title
-        if let title = self.book.title() {
-            bookTitle = title
-            subject += " “\(title)”"
-        }
-
-        // Get chapter name
-        if let chapter = getCurrentChapterName() {
-            chapterName = chapter
-        }
-
-        // Get author name
-        if let author = self.book.metadata.creators.first {
-            authorName = author.name
-        }
-
-        // Sharing html and text
-        html = "<html><body>"
-        html += "<br /><hr> <p>\(chapterName)</p>"
-        html += "<p>\(string)</p> <hr><br />"
-        html += "<center><p style=\"color:gray\">"+readerConfig.localizedShareAllExcerptsFrom+"</p>"
-        html += "<b>\(bookTitle)</b><br />"
-        html += readerConfig.localizedShareBy+" <i>\(authorName)</i><br />"
-
-        if let bookShareLink = readerConfig.localizedShareWebLink {
-            html += "<a href=\"\(bookShareLink.absoluteString)\">\(bookShareLink.absoluteString)</a>"
-            shareItems.append(bookShareLink as AnyObject)
-        }
-
-        html += "</center></body></html>"
-        text = "\(chapterName)\n\n“\(string)” \n\n\(bookTitle) \n\(readerConfig.localizedShareBy) \(authorName)"
-
-        let act = FolioReaderSharingProvider(subject: subject, text: text, html: html)
-        shareItems.insert(contentsOf: [act, "" as AnyObject], at: 0)
-
-        let activityViewController = UIActivityViewController(activityItems: shareItems, applicationActivities: nil)
-        activityViewController.excludedActivityTypes = [UIActivityType.print, UIActivityType.postToVimeo]
-
-        // Pop style on iPad
-        if let actv = activityViewController.popoverPresentationController {
-            actv.sourceView = currentPage
-            actv.sourceRect = rect
-        }
-
-        present(activityViewController, animated: true, completion: nil)
-    }
 
     // MARK: - ScrollView Delegate
 
@@ -1005,6 +872,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
                 }
 
                 if (pageIndicatorView?.currentPage != webViewPage) {
+                    FolioReader.shared.delegate?.folioReader?(FolioReader.shared, changedPage: webViewPage)
                     pageIndicatorView?.currentPage = webViewPage
                 }
             }
@@ -1052,15 +920,15 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
             }
         })
         
-        if let page = currentPage {
-            let pageSize = self.readerConfig.isDirection(self.pageHeight, self.pageWidth, self.pageHeight)
-            let contentOffset = page.webView.scrollView.contentOffset.forDirection(withConfiguration: self.readerConfig)
-            let webViewPage = pageForOffset(contentOffset, pageHeight: pageSize)
-            if (pageIndicatorView?.currentPage != webViewPage) {
-                FolioReader.shared.delegate?.folioReader?(FolioReader.shared, changedPage: webViewPage)
-                pageIndicatorView?.currentPage = webViewPage
-            }
-        }
+//        if let page = currentPage {
+//            let pageSize = self.readerConfig.isDirection(self.pageHeight, self.pageWidth, self.pageHeight)
+//            let contentOffset = page.webView.scrollView.contentOffset.forDirection(withConfiguration: self.readerConfig)
+//            let webViewPage = pageForOffset(contentOffset, pageHeight: pageSize)
+//            if (pageIndicatorView?.currentPage != webViewPage) {
+//                FolioReader.shared.delegate?.folioReader?(FolioReader.shared, changedPage: webViewPage)
+//                pageIndicatorView?.currentPage = webViewPage
+//            }
+//        }
     }
 
     open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
