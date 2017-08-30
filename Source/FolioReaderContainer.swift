@@ -12,7 +12,7 @@ import FontBlaster
 /// Reader container
 open class FolioReaderContainer: UIViewController {
     var centerNavigationController: UINavigationController?
-    var centerViewController: FolioReaderCenter?
+    public var centerViewController: FolioReaderCenter?
     var shouldHideStatusBar = true
     var shouldRemoveEpub = true
     var epubPath: String
@@ -49,6 +49,18 @@ open class FolioReaderContainer: UIViewController {
         if self.epubPath != "" {
             self.initialization()
         }
+    }
+    
+    public func reloadData() {
+        centerViewController?.reloadData()
+    }
+    
+    public func nextPage() {
+        
+    }
+    
+    public func prevPage() {
+        
     }
 
     required public init?(coder aDecoder: NSCoder) {

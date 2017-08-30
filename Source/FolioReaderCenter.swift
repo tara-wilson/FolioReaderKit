@@ -70,14 +70,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     fileprivate var isFirstLoad = true
     fileprivate var currentWebViewScrollPositions = [Int: CGPoint]()
     fileprivate var currentOrientation: UIInterfaceOrientation?
-    
-    public func nextPage() {
-        
-    }
-    
-    public func prevPage() {
-        
-    }
 
     fileprivate var readerConfig: FolioReaderConfig {
         guard let readerContainer = readerContainer else { return FolioReaderConfig() }
@@ -1013,7 +1005,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
                 }
 
                 if (pageIndicatorView?.currentPage != webViewPage) {
-                    FolioReader.shared.delegate?.folioReader?(FolioReader.shared, changedPage: webViewPage)
                     pageIndicatorView?.currentPage = webViewPage
                 }
             }
@@ -1050,6 +1041,14 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
                 let cell = ((scrollView.superview as? UIWebView)?.delegate as? FolioReaderPage) {
                 let currentIndexPathRow = cell.pageNumber - 1
                 self?.currentWebViewScrollPositions[currentIndexPathRow] = scrollView.contentOffset
+                
+                let pageSize = self.readerConfig.isDirection(self.pageHeight, self.pageWidth, self.pageHeight)
+                let contentOffset = page.webView.scrollView.contentOffset.forDirection(withConfiguration: self.readerConfig)
+                let webViewPage = pageForOffset(contentOffset, pageHeight: pageSize)
+                if (pageIndicatorView?.currentPage != webViewPage) {
+                    FolioReader.shared.delegate?.folioReader?(FolioReader.shared, changedPage: webViewPage)
+                    pageIndicatorView?.currentPage = webViewPage
+                }
             }
 
             if (scrollView is UICollectionView) {
