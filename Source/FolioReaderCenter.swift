@@ -1042,7 +1042,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
                 let currentIndexPathRow = cell.pageNumber - 1
                 self?.currentWebViewScrollPositions[currentIndexPathRow] = scrollView.contentOffset
                 
-                let pageSize = self.readerConfig.isDirection(self.pageHeight, self.pageWidth, self.pageHeight)
+                let pageSize = self?.readerConfig.isDirection(self?.pageHeight, self?.pageWidth, self?.pageHeight)
                 let contentOffset = page.webView.scrollView.contentOffset.forDirection(withConfiguration: self.readerConfig)
                 let webViewPage = pageForOffset(contentOffset, pageHeight: pageSize)
                 if (pageIndicatorView?.currentPage != webViewPage) {
