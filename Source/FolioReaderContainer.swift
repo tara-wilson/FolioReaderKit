@@ -181,6 +181,7 @@ open class FolioReaderContainer: UIViewController {
 
                     self.centerViewController?.reloadData()
                     self.folioReader.isReaderReady = true
+                    self.centerViewController?.loadingView.stopAnimating()
                     self.folioReader.delegate?.folioReader?(self.folioReader, didFinishedLoading: self.book)
                 })
             } catch let e as FolioReaderError {

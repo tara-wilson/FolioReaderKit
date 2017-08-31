@@ -239,7 +239,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     }
 
     public func reloadData() {
-        self.loadingView.stopAnimating()
         self.totalPages = (self.book.spine.spineReferences.count ?? 0)
 
         self.collectionView.reloadData()

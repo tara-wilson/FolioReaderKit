@@ -128,7 +128,7 @@ public class ScrollScrubber: NSObject, UIScrollViewDelegate {
 
     // MARK: - show / hide
 
-    func show() {
+    public func show() {
         cancelHide()
 
         visible = true
@@ -150,7 +150,7 @@ public class ScrollScrubber: NSObject, UIScrollViewDelegate {
     }
 
 
-    func hide() {
+    public func hide() {
         visible = false
         resetScrollDelta()
         UIView.animate(withDuration: hideSpeed, animations: {
