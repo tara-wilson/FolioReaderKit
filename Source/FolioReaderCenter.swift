@@ -53,7 +53,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     var recentlyScrolled = false
     var recentlyScrolledDelay = 2.0 // 2 second delay until we clear recentlyScrolled
     var recentlyScrolledTimer: Timer!
-    var scrollScrubber: ScrollScrubber?
+    open var scrollScrubber: ScrollScrubber?
     var activityIndicator = UIActivityIndicatorView()
     var isScrolling = false
     var pageScrollDirection = ScrollDirection()

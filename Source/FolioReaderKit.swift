@@ -174,6 +174,14 @@ extension FolioReader {
 
 extension FolioReader {
 
+    public func getSaved() {
+        //implement these in defaults
+    }
+    
+    public func setSaved() {
+        //implement these in defaults
+    }
+    
     public func register(defaults: [String: Any]) {
         self.defaults.register(defaults: defaults)
     }
@@ -351,6 +359,16 @@ extension FolioReader {
             ] as [String : Any]
 
         self.savedPositionForCurrentBook = position
+    }
+    
+    open func setNewSavedState(pageNumber: Int) {
+//        let position = [
+//            "pageNumber": (self.readerCenter?.currentPageNumber ?? 0),
+//            "pageOffsetX": currentPage.webView.scrollView.contentOffset.x,
+//            "pageOffsetY": currentPage.webView.scrollView.contentOffset.y
+//            ] as [String : Any]
+//        
+//        self.savedPositionForCurrentBook = position
     }
 
     /// Closes and save the reader current instance.

@@ -46,7 +46,7 @@ enum ScrollDirection: Int {
     }
 }
 
-class ScrollScrubber: NSObject, UIScrollViewDelegate {
+public class ScrollScrubber: NSObject, UIScrollViewDelegate {
     weak var delegate: FolioReaderCenter!
     var showSpeed = 0.6
     var hideSpeed = 0.6
@@ -177,7 +177,7 @@ class ScrollScrubber: NSObject, UIScrollViewDelegate {
         visible = true
     }
 
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
 
         if scrollDeltaTimer != nil {
             scrollDeltaTimer.invalidate()
@@ -189,7 +189,7 @@ class ScrollScrubber: NSObject, UIScrollViewDelegate {
         }
     }
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard (readerConfig.scrollDirection == .vertical ||
             readerConfig.scrollDirection == .defaultVertical ||
             readerConfig.scrollDirection == .horizontalWithVerticalContent) else {
@@ -215,11 +215,11 @@ class ScrollScrubber: NSObject, UIScrollViewDelegate {
         }
     }
 
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         resetScrollDelta()
     }
 
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         scrollDeltaTimer = Timer(timeInterval:0.5, target: self, selector: #selector(ScrollScrubber.resetScrollDelta), userInfo: nil, repeats: false)
         RunLoop.current.add(scrollDeltaTimer, forMode: RunLoopMode.commonModes)
     }
