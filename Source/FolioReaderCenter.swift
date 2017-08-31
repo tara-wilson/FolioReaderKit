@@ -387,11 +387,14 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         return self.configure(readerPageCell: reuseableCell, atIndexPath: indexPath)
     }
 
+    var currentIndexPath: IndexPath?
+    
     private func configure(readerPageCell cell: FolioReaderPage?, atIndexPath indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = cell, let readerContainer = readerContainer else {
             return UICollectionViewCell()
         }
 
+        currentIndexPath = indexPath
         cell.setup(withReaderContainer: readerContainer)
         cell.pageNumber = indexPath.row+1
         cell.webView.scrollView.delegate = self
@@ -504,7 +507,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
 
         // Update pages
         pagesForCurrentPage(currentPage)
-        currentPage.refreshPageMode()
 
         scrollScrubber?.setSliderVal()
 
@@ -687,10 +689,8 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         changePageWith(indexPath: indexPath, animated: true) { () -> Void in
             if pageUpdateNeeded {
                 self.updateCurrentPage {
-                    currentPage.audioMarkID(markID)
                 }
             } else {
-                currentPage.audioMarkID(markID)
             }
         }
     }
@@ -726,16 +726,20 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     func isLastPage() -> Bool{
         return (currentPageNumber == self.nextPageNumber)
     }
-
-    func changePageToNext(_ completion: (() -> Void)? = nil) {
-        changePageWith(page: self.nextPageNumber, animated: true) { () -> Void in
-            completion?()
+    
+    open func nextPage() {
+        if let indexpath = self.currentIndexPath {
+            if let cell = collectionView.cellForItem(at: indexpath) as? FolioReaderPage {
+                cell.scrollToNext()
+            }
         }
     }
-
-    func changePageToPrevious(_ completion: (() -> Void)? = nil) {
-        changePageWith(page: self.previousPageNumber, animated: true) { () -> Void in
-            completion?()
+    
+    open func prevPage() {
+        if let indexpath = self.currentIndexPath {
+            if let cell = collectionView.cellForItem(at: indexpath) as? FolioReaderPage {
+                cell.scrollToLast()
+            }
         }
     }
 
@@ -765,40 +769,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
             count += 1
         }
         return count
-    }
-
-    /**
-     Find and return the current chapter resource.
-     */
-    func getCurrentChapter() -> FRResource? {
-        for item in self.book.flatTableOfContents {
-            if
-                let reference = self.book.spine.spineReferences[safe: (self.currentPageNumber - 1)],
-                let resource = item.resource,
-                (resource == reference.resource) {
-                return item.resource
-            }
-        }
-        return nil
-    }
-
-    /**
-     Find and return the current chapter name.
-     */
-    func getCurrentChapterName() -> String? {
-        for item in self.book.flatTableOfContents {
-            guard
-                let reference = self.book.spine.spineReferences[safe: (self.currentPageNumber - 1)],
-                let resource = item.resource,
-                (resource == reference.resource),
-                let title = item.title else {
-                    continue
-            }
-
-            return title
-        }
-
-        return nil
     }
 
     // MARK: Public page methods
@@ -918,16 +888,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
                 self?.scrollScrubber?.scrollViewDidEndDecelerating(scrollView)
             }
         })
-        
-//        if let page = currentPage {
-//            let pageSize = self.readerConfig.isDirection(self.pageHeight, self.pageWidth, self.pageHeight)
-//            let contentOffset = page.webView.scrollView.contentOffset.forDirection(withConfiguration: self.readerConfig)
-//            let webViewPage = pageForOffset(contentOffset, pageHeight: pageSize)
-//            if (pageIndicatorView?.currentPage != webViewPage) {
-//                FolioReader.shared.delegate?.folioReader?(FolioReader.shared, changedPage: webViewPage)
-//                pageIndicatorView?.currentPage = webViewPage
-//            }
-//        }
     }
 
     open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -946,32 +906,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     open func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         scrollScrubber?.scrollViewDidEndScrollingAnimation(scrollView)
     }
-
-
-    // MARK: NavigationBar Actions
-
-    func closeReader(_ sender: UIBarButtonItem) {
-        dismiss()
-        folioReader.close()
-    }
-
-    /**
-     Present chapter list
-     */
-    func presentChapterList(_ sender: UIBarButtonItem) {
-        folioReader.saveReaderState()
-
-        let chapter = FolioReaderChapterList(folioReader: folioReader, readerConfig: readerConfig, book: book, delegate: self)
-        let pageController = PageViewController(folioReader: folioReader, readerConfig: readerConfig)
-
-        pageController.viewControllerOne = chapter
-        pageController.segmentedControlItems = [readerConfig.localizedContentsTitle, readerConfig.localizedHighlightsTitle]
-
-        let nav = UINavigationController(rootViewController: pageController)
-        present(nav, animated: true, completion: nil)
-    }
-
-
 
 }
 
@@ -1020,36 +954,5 @@ extension FolioReaderCenter: FolioReaderPageDelegate {
     public func pageWillLoad(_ page: FolioReaderPage) {
         // Pass the event to the centers `pageDelegate`
         pageDelegate?.pageWillLoad?(page)
-    }
-}
-
-// MARK: FolioReaderChapterListDelegate
-
-extension FolioReaderCenter: FolioReaderChapterListDelegate {
-    
-    func chapterList(_ chapterList: FolioReaderChapterList, didSelectRowAtIndexPath indexPath: IndexPath, withTocReference reference: FRTocReference) {
-        let item = findPageByResource(reference)
-        
-        if item < totalPages {
-            let indexPath = IndexPath(row: item, section: 0)
-            changePageWith(indexPath: indexPath, animated: false, completion: { () -> Void in
-                self.updateCurrentPage()
-            })
-            tempReference = reference
-        } else {
-            print("Failed to load book because the requested resource is missing.")
-        }
-    }
-    
-    func chapterList(didDismissedChapterList chapterList: FolioReaderChapterList) {
-        updateCurrentPage()
-        
-        // Move to #fragment
-        if let reference = tempReference {
-            if let fragmentID = reference.fragmentID, let currentPage = currentPage , fragmentID != "" {
-                currentPage.handleAnchor(reference.fragmentID!, avoidBeginningAnchors: true, animated: true)
-            }
-            tempReference = nil
-        }
     }
 }

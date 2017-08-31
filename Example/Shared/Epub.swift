@@ -15,7 +15,7 @@ enum Epub: Int {
 
     var name: String {
         switch self {
-        case .bookOne:      return "The Silver Chair" // standard eBook
+        case .bookOne:      return "NEW-ELEVATORFINAL020517" // standard eBook
         case .bookTwo:      return "The Adventures Of Sherlock Holmes - Adventure I" // audio-eBook
         }
     }

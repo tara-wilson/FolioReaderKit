@@ -28,19 +28,4 @@ class FRSpine: NSObject {
         }
         return false
     }
-
-    func nextChapter(_ href: String) -> FRResource? {
-        var found = false;
-
-        for item in spineReferences {
-            if(found){
-                return item.resource
-            }
-
-            if(item.resource.href == href) {
-                found = true
-            }
-        }
-        return nil
-    }
 }

@@ -56,11 +56,11 @@ open class FolioReaderContainer: UIViewController {
     }
     
     public func nextPage() {
-        
+        centerViewController?.nextPage()
     }
     
     public func prevPage() {
-        
+        centerViewController?.prevPage()
     }
 
     required public init?(coder aDecoder: NSCoder) {

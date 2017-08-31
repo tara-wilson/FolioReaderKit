@@ -146,15 +146,9 @@ class FREpubParser: NSObject, SSZipArchiveDelegate {
                 resource.mediaType = FRMediaType.mediaTypeByName(item.attributes["media-type"]!, fileName: resource.href)
                 resource.mediaOverlay = item.attributes["media-overlay"]
 
-                // if a .smil file is listed in resources, go parse that file now and save it on book model
-                if (resource.mediaType != nil && resource.mediaType == FRMediaType.SMIL) {
-                    readSmilFile(resource)
-                }
 
                 book.resources.add(resource)
             }
-
-            book.smils.basePath = resourcesBasePath
 
             // Read metadata
             book.metadata = readMetadata(xmlDoc.root["metadata"].children)
@@ -201,47 +195,7 @@ class FREpubParser: NSObject, SSZipArchiveDelegate {
             throw FolioReaderError(kind: .ErrorInOpf)
         }
     }
-
-    /**
-     Reads and parses a .smil file
-     */
-    fileprivate func readSmilFile(_ resource: FRResource) {
-        do {
-            let smilData = try Data(contentsOf: URL(fileURLWithPath: resource.fullHref), options: .alwaysMapped)
-            var smilFile = FRSmilFile(resource: resource)
-            let xmlDoc = try AEXMLDocument(xml: smilData)
-
-            let children = xmlDoc.root["body"].children
-
-            if children.count > 0 {
-                smilFile.data.append(contentsOf: readSmilFileElements(children))
-            }
-
-            book.smils.add(smilFile)
-        } catch {
-            print("Cannot read .smil file: "+resource.href)
-        }
-    }
-
-    fileprivate func readSmilFileElements(_ children:[AEXMLElement]) -> [FRSmilElement] {
-        var data = [FRSmilElement]()
-
-        // convert each smil element to a FRSmil object
-        for item in children {
-
-            let smil = FRSmilElement(name: item.name, attributes: item.attributes)
-
-            // if this element has children, convert them to objects too
-            if item.children.count > 0 {
-                smil.children.append(contentsOf: readSmilFileElements(item.children))
-            }
-
-            data.append(smil)
-        }
-
-        return data
-    }
-
+    
     /**
      Read and parse the Table of Contents.
      */

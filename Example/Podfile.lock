@@ -13,11 +13,11 @@ PODS:
   - MenuItemKit (2.0)
   - Nimble (5.0.0)
   - Quick (0.10.0)
-  - Realm (2.7.0):
-    - Realm/Headers (= 2.7.0)
-  - Realm/Headers (2.7.0)
-  - RealmSwift (2.7.0):
-    - Realm (= 2.7.0)
+  - Realm (2.10.0):
+    - Realm/Headers (= 2.10.0)
+  - Realm/Headers (2.10.0)
+  - RealmSwift (2.10.0):
+    - Realm (= 2.10.0)
   - SSZipArchive (1.8.1)
   - ZFDragableModalTransition (0.6)
 
@@ -38,11 +38,11 @@ SPEC CHECKSUMS:
   MenuItemKit: 9af69953dc983803ee85230e205fadbac0f26213
   Nimble: 56fc9f5020effa2206de22c3dd910f4fb011b92f
   Quick: 5d290df1c69d5ee2f0729956dcf0fd9a30447eaa
-  Realm: 07e5d3a9e0e41d65fd5f9f05150ed6295d0f093b
-  RealmSwift: 6d06425d3900c86473c4f323bf6949b43fca22bc
+  Realm: 98b3a25643cf6b3e07d2b99fb43fe0eb9c801dec
+  RealmSwift: 34073ad3a31232bbaf7c0db898c037940284cba2
   SSZipArchive: 04547dfa448be5ed7ecbaf7eaf8a6e9eb9b42997
   ZFDragableModalTransition: 0d294eaaba6edfcb9839595de765f9ca06a4b524
 
-PODFILE CHECKSUM: 38a26e71a3566d844488629f70fa094d06893b23
+PODFILE CHECKSUM: 40cea87e34611164d8e5fa7f53167605301c62d7
 
 COCOAPODS: 1.0.1
