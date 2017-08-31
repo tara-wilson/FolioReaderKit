@@ -343,7 +343,7 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
     open func scrollToNext() {
         if self.readerConfig.scrollDirection == .horizontal {
             let currentoffset = webView.scrollView.contentOffset.forDirection()
-            scrollPageToOffset(currentoffset + 300.0, animated: true)
+            scrollPageToOffset(currentoffset + webView.scrollView.contentSize.width, animated: true)
         }
         
     }
@@ -351,7 +351,9 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
     open func scrollToLast() {
         if self.readerConfig.scrollDirection == .horizontal {
             let currentoffset = webView.scrollView.contentOffset.forDirection()
-            scrollPageToOffset(currentoffset - 300.0, animated: true)
+            if currentoffset > 0 {
+                scrollPageToOffset(currentoffset - webView.scrollView.contentSize.width, animated: true)
+            }
         }
     }
 
