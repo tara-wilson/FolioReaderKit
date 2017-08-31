@@ -99,6 +99,8 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         fatalError("This class doesn't support NSCoding.")
     }
 
+    
+    
     /**
      Common Initialization
      */
@@ -730,6 +732,14 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         if let indexpath = self.currentIndexPath {
             if let cell = collectionView.cellForItem(at: indexpath) as? FolioReaderPage {
                 cell.scrollToNext()
+            }
+        }
+    }
+    
+    open func goToPage(page: Int) {
+        if let indexpath = self.currentIndexPath {
+            if let cell = collectionView.cellForItem(at: indexpath) as? FolioReaderPage {
+                cell.scrollToPage(page: page)
             }
         }
     }

@@ -340,6 +340,15 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
         webView.scrollView.setContentOffset(pageOffsetPoint, animated: animated)
     }
     
+    open func scrollToPage(page: Int) {
+        if self.readerConfig.scrollDirection == .horizontal {
+            scrollPageToOffset(CGFloat(page) * webView.scrollView.frame.width, animated: true)
+        } else {
+            scrollPageToOffset(CGFloat(page) * webView.scrollView.frame.height, animated: true)
+        }
+        
+    }
+    
     open func scrollToNext() {
         if self.readerConfig.scrollDirection == .horizontal {
             let bottomOffset = self.readerConfig.isDirection(

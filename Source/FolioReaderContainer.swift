@@ -51,6 +51,11 @@ open class FolioReaderContainer: UIViewController {
         }
     }
     
+    public func moveToMyPage(page: Int) {
+        //tara
+        centerViewController?.goToPage(page: page)
+    }
+    
     public func reloadData() {
         centerViewController?.reloadData()
     }
