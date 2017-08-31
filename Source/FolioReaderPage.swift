@@ -342,8 +342,16 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
     
     open func scrollToNext() {
         if self.readerConfig.scrollDirection == .horizontal {
-            let currentoffset = webView.scrollView.contentOffset.forDirection()
-            scrollPageToOffset(currentoffset + webView.scrollView.contentSize.width, animated: true)
+            let bottomOffset = self.readerConfig.isDirection(
+                CGPoint(x: 0, y: webView.scrollView.contentSize.height - webView.scrollView.bounds.height),
+                CGPoint(x: webView.scrollView.contentSize.width - webView.scrollView.bounds.width, y: 0),
+                CGPoint(x: webView.scrollView.contentSize.width - webView.scrollView.bounds.width, y: 0)
+            )
+            if bottomOffset.forDirection(withConfiguration: self.readerConfig) >= 0 {
+                let currentoffset = webView.scrollView.contentOffset.forDirection()
+                
+                scrollPageToOffset(currentoffset + webView.scrollView.frame.width, animated: true)
+            }
         }
         
     }
@@ -352,8 +360,9 @@ open class FolioReaderPage: UICollectionViewCell, UIWebViewDelegate, UIGestureRe
         if self.readerConfig.scrollDirection == .horizontal {
             let currentoffset = webView.scrollView.contentOffset.forDirection()
             if currentoffset > 0 {
-                scrollPageToOffset(currentoffset - webView.scrollView.contentSize.width, animated: true)
+                scrollPageToOffset(currentoffset - webView.scrollView.frame.width, animated: true)
             }
+            
         }
     }
 
