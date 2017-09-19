@@ -9,7 +9,7 @@
 import UIKit
 
 /// Table Of Contents delegate
-@objc protocol FolioReaderChapterListDelegate: class {
+@objc public protocol FolioReaderChapterListDelegate: class {
     /**
      Notifies when the user selected some item on menu.
      */
@@ -21,11 +21,10 @@ import UIKit
     func chapterList(didDismissedChapterList chapterList: FolioReaderChapterList)
 }
 
-public
-class FolioReaderChapterList: UITableViewController {
+public class FolioReaderChapterList: UITableViewController {
     
-    weak var delegate: FolioReaderChapterListDelegate?
-    fileprivate var tocItems = [FRTocReference]()
+    public var delegate: FolioReaderChapterListDelegate?
+    public var tocItems = [FRTocReference]()
     fileprivate var book: FRBook
     fileprivate var readerConfig: FolioReaderConfig
     fileprivate var folioReader: FolioReader
@@ -107,6 +106,10 @@ class FolioReaderChapterList: UITableViewController {
     }
     
     // MARK: - Table view delegate
+    public func didSelect(indexPath: IndexPath) {
+        let tocReference = tocItems[(indexPath as NSIndexPath).row]
+        delegate?.chapterList(self, didSelectRowAtIndexPath: indexPath, withTocReference: tocReference)
+    }
     
     override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let tocReference = tocItems[(indexPath as NSIndexPath).row]
