@@ -277,7 +277,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         self.transformViewForRTL(page)
     }
     
-    public func presentChapterList(_ sender: UIBarButtonItem) -> FolioReaderChapterList {
+    public func presentChapterList(_ sender: UIBarButtonItem?) -> FolioReaderChapterList {
         folioReader.saveReaderState()
         
         let chapter = FolioReaderChapterList(folioReader: folioReader, readerConfig: readerConfig, book: book, delegate: self)

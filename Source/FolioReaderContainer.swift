@@ -60,6 +60,10 @@ open class FolioReaderContainer: UIViewController {
         centerViewController?.reloadData()
     }
     
+    public func getChapterList() -> FolioReaderChapterList? {
+        return centerViewController?.presentChapterList(nil)
+    }
+    
     public func nextPage() {
         centerViewController?.nextPage()
     }
