@@ -841,7 +841,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         scrollScrubber?.scrollViewDidScroll(scrollView)
 
         let isCollectionScrollView = (scrollView is UICollectionView)
-        let scrollType: ScrollType = ((isCollectionScrollView == true) ? .chapter : .page)
+        let scrollType: ScrollType = .page
 
         // Update current reading page
         if (isCollectionScrollView == false), let page = currentPage {
