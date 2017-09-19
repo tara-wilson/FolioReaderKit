@@ -36,6 +36,7 @@ public class FolioReaderChapterList: UITableViewController {
         self.book = book
         
         super.init(style: UITableViewStyle.plain)
+        self.tocItems = self.book.flatTableOfContents
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -55,7 +56,7 @@ public class FolioReaderChapterList: UITableViewController {
         self.tableView.estimatedRowHeight = 50
         
         // Create TOC list
-        self.tocItems = self.book.flatTableOfContents
+        
     }
     
     // MARK: - Table view data source
