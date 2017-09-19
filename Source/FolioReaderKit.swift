@@ -80,7 +80,7 @@ public enum MediaOverlayStyle: Int {
     ///   - book: The Book instance
     @objc optional func folioReader(_ folioReader: FolioReader, didFinishedLoading book: FRBook)
     
-    @objc optional func folioReader(_ folioReader: FolioReader, changedPage page: Int)
+    @objc optional func folioReader(_ folioReader: FolioReader, changedPage page: Int, chapter: Int)
 
     /// Called when reader did closed.
     ///

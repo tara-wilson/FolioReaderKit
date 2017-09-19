@@ -256,7 +256,6 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
                 return
         }
         
-        print("HERE NUMBER: \(pageNumber)")
         self.changePageWith(page: pageNumber)
         self.currentPageNumber = pageNumber
     }
@@ -867,7 +866,17 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
                 }
 
                 if (pageIndicatorView?.currentPage != webViewPage) {
-                    FolioReader.shared.delegate?.folioReader?(FolioReader.shared, changedPage: webViewPage)
+                    
+                    if
+                        let bookId = self.book.name,
+                        let position = folioReader.savedPositionForCurrentBook as? NSDictionary,
+                        let pageNumber = position["pageNumber"] as? Int {
+                        FolioReader.shared.delegate?.folioReader?(FolioReader.shared, changedPage: webViewPage, chapter: pageNumber)
+                    } else {
+                        FolioReader.shared.delegate?.folioReader?(FolioReader.shared, changedPage: webViewPage, chapter: 0)
+                    }
+                    
+                    
                     pageIndicatorView?.currentPage = webViewPage
                 }
             }
