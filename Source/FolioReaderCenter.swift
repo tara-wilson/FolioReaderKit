@@ -41,7 +41,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     /// The current visible page on reader
     open fileprivate(set) var currentPage: FolioReaderPage?
 
-    var collectionView: UICollectionView!
+    open var collectionView: UICollectionView!
     let collectionViewLayout = UICollectionViewFlowLayout()
     var loadingView: UIActivityIndicatorView!
     var pages: [String]!
@@ -76,7 +76,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         return readerContainer.readerConfig
     }
 
-    fileprivate var book: FRBook {
+    open var book: FRBook {
         guard let readerContainer = readerContainer else { return FRBook() }
         return readerContainer.book
     }
@@ -242,6 +242,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
 
     public func reloadData() {
         self.totalPages = (self.book.spine.spineReferences.count ?? 0)
+        print("HERE: \(totalPages)")
 
         self.collectionView.reloadData()
         self.setCollectionViewProgressiveDirection()
