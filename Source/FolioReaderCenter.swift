@@ -277,7 +277,7 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         self.transformViewForRTL(page)
     }
     
-    func presentChapterList(_ sender: UIBarButtonItem) {
+    public func presentChapterList(_ sender: UIBarButtonItem) -> FolioReaderChapterList {
         folioReader.saveReaderState()
         
         let chapter = FolioReaderChapterList(folioReader: folioReader, readerConfig: readerConfig, book: book, delegate: self)
@@ -287,7 +287,8 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
         pageController.segmentedControlItems = [readerConfig.localizedContentsTitle, readerConfig.localizedHighlightsTitle]
         
         let nav = UINavigationController(rootViewController: pageController)
-        present(nav, animated: true, completion: nil)
+        return chapter
+//        present(nav, animated: true, completion: nil)
     }
 
     // MARK: Change layout orientation

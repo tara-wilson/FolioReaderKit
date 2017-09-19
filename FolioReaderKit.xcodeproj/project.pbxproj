@@ -65,7 +65,6 @@
 		DB40E6D01F5732560028A2C3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB40E6CF1F5732560028A2C3 /* Extensions.swift */; };
 		DB40E6D21F573F0F0028A2C3 /* FolioReaderUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB40E6D11F573F0E0028A2C3 /* FolioReaderUserDefaults.swift */; };
 		DB5903391F70C16C006E5CAD /* FolioReaderChapterList.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5903381F70C16C006E5CAD /* FolioReaderChapterList.swift */; };
-		DB59033C1F70C275006E5CAD /* FolioReaderChapterListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB59033A1F70C183006E5CAD /* FolioReaderChapterListCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -533,7 +532,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB59033C1F70C275006E5CAD /* FolioReaderChapterListCell.swift in Sources */,
 				1A958F9F1D397BE900D56699 /* FolioReaderConfig.swift in Sources */,
 				1A958FA51D397BE900D56699 /* FolioReaderPage.swift in Sources */,
 				B0D69CC91D0387F7003B4CCD /* SMSegment.swift in Sources */,

@@ -21,6 +21,7 @@ import UIKit
     func chapterList(didDismissedChapterList chapterList: FolioReaderChapterList)
 }
 
+public
 class FolioReaderChapterList: UITableViewController {
     
     weak var delegate: FolioReaderChapterListDelegate?
@@ -38,11 +39,11 @@ class FolioReaderChapterList: UITableViewController {
         super.init(style: UITableViewStyle.plain)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init with coder not supported")
     }
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         // Register cell classes
@@ -60,15 +61,15 @@ class FolioReaderChapterList: UITableViewController {
     
     // MARK: - Table view data source
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    override public func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tocItems.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: kReuseCellIdentifier, for: indexPath) as! FolioReaderChapterListCell
         
         cell.setup(withConfiguration: self.readerConfig)
@@ -107,7 +108,7 @@ class FolioReaderChapterList: UITableViewController {
     
     // MARK: - Table view delegate
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let tocReference = tocItems[(indexPath as NSIndexPath).row]
         delegate?.chapterList(self, didSelectRowAtIndexPath: indexPath, withTocReference: tocReference)
         
@@ -115,5 +116,53 @@ class FolioReaderChapterList: UITableViewController {
         dismiss { 
             self.delegate?.chapterList(didDismissedChapterList: self)
         }
+    }
+}
+
+class FolioReaderChapterListCell: UITableViewCell {
+    var indexLabel: UILabel?
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.indexLabel = UILabel()
+    }
+    
+    func setup(withConfiguration readerConfig: FolioReaderConfig) {
+        
+        self.indexLabel?.lineBreakMode = .byWordWrapping
+        self.indexLabel?.numberOfLines = 0
+        self.indexLabel?.translatesAutoresizingMaskIntoConstraints = false
+        self.indexLabel?.font = UIFont(name: "Avenir-Light", size: 17)
+        self.indexLabel?.textColor = readerConfig.menuTextColor
+        
+        if let label = self.indexLabel {
+            self.contentView.addSubview(label)
+            
+            // Configure cell contraints
+            var constraints = [NSLayoutConstraint]()
+            let views = ["label": label]
+            
+            NSLayoutConstraint.constraints(withVisualFormat: "H:|-15-[label]-15-|", options: [], metrics: nil, views: views).forEach {
+                constraints.append($0 as NSLayoutConstraint)
+            }
+            
+            NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[label]-16-|", options: [], metrics: nil, views: views).forEach {
+                constraints.append($0 as NSLayoutConstraint)
+            }
+            
+            self.contentView.addConstraints(constraints)
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("storyboards are incompatible with truth and beauty")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        // As the `setup` is called at each reuse, make sure the label is added only once to the view hierarchy.
+        self.indexLabel?.removeFromSuperview()
     }
 }
