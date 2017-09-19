@@ -255,7 +255,8 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
                 self.currentPageNumber = 1
                 return
         }
-
+        
+        print("HERE NUMBER: \(pageNumber)")
         self.changePageWith(page: pageNumber)
         self.currentPageNumber = pageNumber
     }
