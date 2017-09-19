@@ -276,6 +276,19 @@ open class FolioReaderCenter: UIViewController, UICollectionViewDelegate, UIColl
     func setPageProgressiveDirection(_ page: FolioReaderPage) {
         self.transformViewForRTL(page)
     }
+    
+    func presentChapterList(_ sender: UIBarButtonItem) {
+        folioReader.saveReaderState()
+        
+        let chapter = FolioReaderChapterList(folioReader: folioReader, readerConfig: readerConfig, book: book, delegate: self)
+        let pageController = PageViewController(folioReader: folioReader, readerConfig: readerConfig)
+        
+        pageController.viewControllerOne = chapter
+        pageController.segmentedControlItems = [readerConfig.localizedContentsTitle, readerConfig.localizedHighlightsTitle]
+        
+        let nav = UINavigationController(rootViewController: pageController)
+        present(nav, animated: true, completion: nil)
+    }
 
     // MARK: Change layout orientation
 
@@ -964,5 +977,34 @@ extension FolioReaderCenter: FolioReaderPageDelegate {
     public func pageWillLoad(_ page: FolioReaderPage) {
         // Pass the event to the centers `pageDelegate`
         pageDelegate?.pageWillLoad?(page)
+    }
+}
+
+extension FolioReaderCenter: FolioReaderChapterListDelegate {
+    
+    func chapterList(_ chapterList: FolioReaderChapterList, didSelectRowAtIndexPath indexPath: IndexPath, withTocReference reference: FRTocReference) {
+        let item = findPageByResource(reference)
+        
+        if item < totalPages {
+            let indexPath = IndexPath(row: item, section: 0)
+            changePageWith(indexPath: indexPath, animated: false, completion: { () -> Void in
+                self.updateCurrentPage()
+            })
+            tempReference = reference
+        } else {
+            print("Failed to load book because the requested resource is missing.")
+        }
+    }
+    
+    func chapterList(didDismissedChapterList chapterList: FolioReaderChapterList) {
+        updateCurrentPage()
+        
+        // Move to #fragment
+        if let reference = tempReference {
+            if let fragmentID = reference.fragmentID, let currentPage = currentPage , fragmentID != "" {
+                currentPage.handleAnchor(reference.fragmentID!, avoidBeginningAnchors: true, animated: true)
+            }
+            tempReference = nil
+        }
     }
 }
